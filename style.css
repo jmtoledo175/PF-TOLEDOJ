@@ -1,0 +1,44 @@
+body {
+  font-family: "Oswald", sans-serif;
+}
+.container-fluid {
+  --bs-gutter-x: 0.5vh;
+}
+
+.custom-navbar {
+  background-color: #141414;
+}
+
+header nav div a {
+  margin-left: 0.5vh;
+  margin-top: 0vh;
+  margin-bottom: 0vh;
+}
+
+.navbar-toggler-icon {
+  margin-left: 1vh;
+}
+
+.logo {
+  width: 8vh;
+}
+
+.nav-item {
+  margin: 10px;
+  text-align: center;
+}
+.nav-link {
+  font-size: 3vh;
+}
+.navbar-nav {
+  --bs-nav-link-color: #b8ae9c;
+}
+
+.navbar-nav .nav-link.active,
+.navbar-nav .nav-link.show {
+  color: white;
+}
+
+.custome-p {
+  font-size: 3vh;
+}
