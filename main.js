@@ -1,4 +1,4 @@
-class producto {
+class Producto {
   constructor(id, nombre, precio, descripcion, img, cantidad) {
     this.id = id;
     this.nombre = nombre;
@@ -95,22 +95,31 @@ class carrito {
   finalizarCompra() {
     const btn_comprar = document.getElementById("Comprar");
     btn_comprar.addEventListener("click", () => {
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "Tu compra fue realizada con éxito",
-        showConfirmButton: false,
-        timer: 3500,
-      });
+      if (this.listaCarrito.length > 0) {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Tu compra fue realizada con éxito",
+          showConfirmButton: false,
+          timer: 3500,
+        });
 
-      // Limpia el carrito y el almacenamiento local
-      this.limpiarCarrito();
-      this.guardarStorage();
-      // Limpia el contenido del carrito en el HTML
-      const contenedor_carrito = document.getElementById("contenedor_carrito");
-      contenedor_carrito.innerHTML = "";
-      // Actualiza el total y muestra el carrito vacío
-      this.actualizarTotal();
+        // Limpia el carrito y el almacenamiento local
+        this.limpiarCarrito();
+        this.guardarStorage();
+        // Limpia el contenido del carrito en el HTML
+        const contenedor_carrito =
+          document.getElementById("contenedor_carrito");
+        contenedor_carrito.innerHTML = "";
+        // Actualiza el total y muestra el carrito vacío
+        this.actualizarTotal();
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "¡Debes añadir productos para poder finalizar la compra!",
+        });
+      }
     });
   }
 
@@ -213,6 +222,28 @@ class agregarProductos {
     this.listaDeProductos.push(producto);
   }
 
+  async preparar_contenedor_productos() {
+    try {
+      let listadeProductosJSON = await fetch("simularAPI.json");
+      let listadeProductosJS = await listadeProductosJSON.json();
+
+      listadeProductosJS.forEach((producto) => {
+        let nuevoProducto = new Producto(
+          producto.id,
+          producto.nombre,
+          producto.precio,
+          producto.descripcion,
+          producto.img
+        );
+        this.agregar(nuevoProducto);
+      });
+
+      this.mostrar();
+    } catch (error) {
+      console.error("Error al obtener y procesar los datos:", error);
+    }
+  }
+
   mostrar() {
     const contenedor_productos = document.getElementById(
       "contenedor_productos"
@@ -240,7 +271,7 @@ class agregarProductos {
         Swal.fire({
           position: "center",
           icon: "success",
-          title: "Producto agregado",
+          title: `${producto.nombre} agregado`,
           showConfirmButton: false,
           timer: 2500,
         });
@@ -256,109 +287,12 @@ class agregarProductos {
   }
 }
 
-const p1 = new producto(
-  1,
-  "Malbec",
-  1100,
-  "Sabores frescos de grosella y cereza negra con taninos dulces y redondos terminando con un largo final de notas vanela y clavo de olor",
-  "https://www.espaciovino.com.ar/media/default/0001/59/thumb_58921_default_big.jpeg"
-);
-const p2 = new producto(
-  2,
-  "Portillo Cabernet Sauvignon",
-  1500,
-  "Posee aromas que combinan frutos rojos con pimiento rojo y notas de pimienta negra.",
-  "https://www.espaciovino.com.ar/media/default/0001/59/thumb_58919_default_big.jpeg"
-);
-const p3 = new producto(
-  3,
-  "Portillo Chardonnay",
-  1550,
-  "En nariz presenta aromas delicados que recuerdan a frutas como la manzana y la banana con notas minerales. ",
-  "https://www.espaciovino.com.ar/media/default/0001/59/thumb_58920_default_big.jpeg"
-);
-const p4 = new producto(
-  4,
-  "Portillo Merlot",
-  1300,
-  "En boca la fruta es concentrada, con taninos suaves y un final prolongado. Joven y frutado.",
-  "https://www.espaciovino.com.ar/media/default/0001/59/thumb_58922_default_big.jpeg"
-);
-const p5 = new producto(
-  5,
-  "Portillo Tempranillo",
-  1522,
-  "En boca se presenta fresco y frutado, con taninos dulces y buena concentración.",
-  "https://www.espaciovino.com.ar/media/default/0001/59/thumb_58925_default_big.jpeg"
-);
-const p6 = new producto(
-  6,
-  "Portillo Syrah",
-  1522,
-  "En boca es un vino de entrada suave, donde se perciben frutas con buena intensidad, una sutil nota especiada y sobre el final de boca una sensación dulce aportada por sus taninos.",
-  "https://www.espaciovino.com.ar/media/default/0001/59/thumb_58926_default_big.jpeg"
-);
-const p7 = new producto(
-  7,
-  "Cordero con Piel de Lobo Malbec",
-  2850,
-  "Con una acidez justa deja en boca un picor agradable con un final reforzado por su paso por madera.",
-  "https://www.espaciovino.com.ar/media/default/0001/61/thumb_60952_default_big.jpeg"
-);
-const p8 = new producto(
-  8,
-  "Prófugo Especias Cabernet Sauvignon",
-  2113,
-  " En boca tiene una entrada amable y acaramelada. Especialmente pensado para amantes de vinos especiados.",
-  "https://www.espaciovino.com.ar/media/default/0001/67/thumb_66449_default_big.jpeg"
-);
-const p9 = new producto(
-  9,
-  "Callejón del Crimen Gran Reserva Malbec",
-  6600,
-  "En boca se destacan ciruelas maduras y una muy buena acidez con un toque de pasas y taninos dulces, redondos. Vino sobresaliente.",
-  "https://www.espaciovino.com.ar/media/default/0001/59/thumb_58380_default_big.jpeg"
-);
-const p10 = new producto(
-  10,
-  "Prófugo Frutos Rojos Malbec",
-  1270,
-  "Presenta un color rojo violáceo, de mediana intensidad. En nariz destacan sus notas de vainilla y ciruelas. En boca tiene una entrada amable con sensación de dulzor, muy afrutado.",
-  "https://www.espaciovino.com.ar/media/default/0001/67/thumb_66448_default_big.jpeg"
-);
-const p11 = new producto(
-  11,
-  "Callejón del Crimen Gran Reserva Cabernet Sauvignon",
-  6600,
-  "En boca es un vino de gran estructura con sabor a cassis y frutos.",
-  "https://www.espaciovino.com.ar/media/default/0001/59/thumb_58379_default_big.jpeg"
-);
-const p12 = new producto(
-  12,
-  "Crux Malbec",
-  2838,
-  "En boca se perciben notas a frutos rojos, sutileza ahumada y mineralidad. Persistencia media.",
-  "https://www.espaciovino.com.ar/media/default/0001/64/thumb_63545_default_big.jpeg"
-);
-
 const CP = new agregarProductos();
 const Carrito = new carrito();
 
-CP.agregar(p1);
-CP.agregar(p2);
-CP.agregar(p3);
-CP.agregar(p4);
-CP.agregar(p5);
-CP.agregar(p6);
-CP.agregar(p7);
-CP.agregar(p8);
-CP.agregar(p9);
-CP.agregar(p10);
-CP.agregar(p11);
-CP.agregar(p12);
-
+CP.preparar_contenedor_productos();
 CP.eventoFiltro();
-CP.mostrar();
+
 Carrito.recuperarStorage();
 Carrito.mostrar();
 Carrito.registrarEventosBotones();
